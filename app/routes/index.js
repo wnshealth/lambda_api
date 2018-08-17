@@ -6,7 +6,13 @@ const sources = require( __root + '/app/controllers/sources.js' );
 const router = express.Router();
 
 router.get(
-  '/yo',
+  '/v1/yo',
+  ( req, res ) => { res.sendStatus( 200 ); }
+);
+
+router.post(
+  '/v1/sources',
+  sources.create,
   ( req, res ) => { res.sendStatus( 200 ); }
 );
 
