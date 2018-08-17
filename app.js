@@ -13,4 +13,8 @@ app.use( bodyParser.json() );
 
 routes( app );
 
+app.listen( 1337, () => {
+  console.log( app.get( 'name' ) + ' processing.' );
+});
+
 module.exports = app;
