@@ -6,10 +6,26 @@ const moment = require( 'moment' );
 
 var dynamoDb = new AWS.DynamoDB.DocumentClient();
 
+const REQUIRED = [
+  'first_name',
+  'last_name',
+  'phone_number',
+  'email',
+  'state'
+];
+
 class Leads {
   constructor() {}
 
   validate( req, res, next ) {
+    for ( let i = 0, l = REQUIRED.length; i < l; i++ )
+      if ( !req.body[ REQUIRED[ i ] ] )
+        return res.status( 500 )
+          .json({
+            success: false,
+            message: attr + ' required.'
+          }).end();
+
     next();
   }
 
@@ -63,7 +79,7 @@ class Leads {
         return res.status( 500 )
           .json({
             success: false,
-            message: 'Could send to call center.'
+            message: 'Could send lead to call center.'
           }).end();
       }
       console.log( body );
