@@ -23,7 +23,7 @@ class Leads {
         return res.status( 500 )
           .json({
             success: false,
-            message: attr + ' required.'
+            message: REQUIRED[ i ] + ' required.'
           }).end();
 
     next();
