@@ -19,4 +19,13 @@ router.post(
   ( req, res ) => { res.sendStatus( 200 ); }
 );
 
+router.post(
+  '/v1/leads',
+  middleware.data,
+  middleware.tokenAuth,
+  leads.dynamoDbPut,
+  leads.send,
+  ( req, res ) => { res.sendStatus( 200 ); }
+);
+
 module.exports = app => app.use( router );
