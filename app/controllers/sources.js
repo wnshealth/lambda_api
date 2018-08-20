@@ -1,4 +1,5 @@
 const AWS = require( 'aws-sdk' );
+const jwt = require( 'jsonwebtoken' );
 const uuid = require( 'uuid/v4' );
 
 var s3Bucket = new AWS.S3( { params: { Bucket: 'wns.sources' } } );
@@ -16,7 +17,7 @@ class Sources {
       source_id: uuid(),
       name: req.body.name
     };
-    req.data.token = jwt.sign( source, process.env.JWT_SECRET, {} );
+    req.data.token = jwt.sign( req.data.source, process.env.JWT_SECRET, {} );
     next();
   }
 
@@ -37,13 +38,13 @@ class Sources {
 
   s3Upload( req, res, next ) {
     var params = {
-      Key: btoa( req.data.source.source_id ),
+      Key: req.data.source.source_id,
       Body: JSON.stringify( req.data ),
       ContentType: 'text/json',
       ACL: 'public-read'
     };
 
-    this.s3Bucket.upload( params, ( err, data ) => {
+    s3Bucket.upload( params, ( err, data ) => {
       if ( err ) {
         console.log( err );
         return res.status( 500 )
