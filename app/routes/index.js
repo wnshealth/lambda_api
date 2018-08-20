@@ -26,6 +26,7 @@ router.post(
   middleware.tokenAuth,
   leads.validate,
   leads.create,
+  leads.test,
   leads.dynamoDbPut,
   leads.send,
   ( req, res ) => {

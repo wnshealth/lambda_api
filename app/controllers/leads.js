@@ -43,6 +43,16 @@ class Leads {
     next();
   }
 
+  test( req, res, next ) {
+    if ( req.data.lead.test )
+      return res.status( 200 )
+        .json({
+          success: true
+        }).end();
+
+    next();
+  }
+
   dynamoDbPut( req, res, next ) {
     dynamoDb.put({
       TableName: 'wns.leads',
@@ -61,11 +71,6 @@ class Leads {
   }
 
   send( req, res, next ) {
-    if ( req.data.lead.test )
-      return res.status( 200 )
-        .json({
-          success: true
-        }).end();
     var opts = {
       uri: 'https://mux.anomalysquared.com/wns/ib',
       method: 'POST',
@@ -92,6 +97,7 @@ module.exports = ( leads => {
   return {
     validate: leads.validate.bind( leads ),
     create: leads.create.bind( leads ),
+    test: leads.test.bind( leads ),
     dynamoDbPut: leads.dynamoDbPut.bind( leads ),
     send: leads.send.bind( leads )
   };
