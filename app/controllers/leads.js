@@ -1,4 +1,5 @@
 const AWS = require( 'aws-sdk' );
+const request = require( 'request' );
 const _ = require( 'lodash' );
 const uuid = require( 'uuid/v4' );
 const moment = require( 'moment' );
@@ -19,8 +20,10 @@ class Leads {
       lead_id: id,
       uuid: id,
       source_id: req.data.source_id,
-      created_at: moment().format( 'YYYY-MM-DD' );
+      access_key: 'fQWnG7VbE1aAFfkpe7FM',
+      created_at: moment().format( 'YYYY-MM-DD' )
     }, req.body );
+    console.log( req.data.lead );
     next();
   }
 
@@ -42,7 +45,30 @@ class Leads {
   }
 
   send( req, res, next ) {
-    next();
+    if ( req.data.lead.test )
+      return res.status( 200 )
+        .json({
+          success: true
+        }).end();
+    var opts = {
+      uri: 'https://mux.anomalysquared.com/wns/ib',
+      method: 'POST',
+      json: true,
+      body: req.data.lead
+    };
+
+    request( opts, function( err, response, body ) {
+      if ( err ) {
+        console.log( err );
+        return res.status( 500 )
+          .json({
+            success: false,
+            message: 'Could send to call center.'
+          }).end();
+      }
+      console.log( body );
+      next();
+    });
   }
 }
 
