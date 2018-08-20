@@ -84,7 +84,7 @@ class Leads {
         return res.status( 500 )
           .json({
             success: false,
-            message: 'Could send lead to call center.'
+            message: 'Could not send lead to call center.'
           }).end();
       }
       console.log( body );
