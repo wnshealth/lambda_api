@@ -3,6 +3,7 @@ const express = require( 'express' );
 const middleware = require( __root + '/app/middleware' );
 const sources = require( __root + '/app/controllers/sources' );
 const leads = require( __root + '/app/controllers/leads' );
+const stats = require( __root + '/app/controllers/stats' );
 
 const router = express.Router();
 
@@ -36,5 +37,23 @@ router.post(
       }).end();
   }
 );
+
+router.get(
+  '/v1/stats',
+  middleware.data,
+  ( req, res, next ) => {
+    req.query.token === process.env.WNS_TOKEN
+      ? next()
+      : res.status( 401 )
+          .json( { success: false, message: 'Invalid token.' } )
+          .end();
+  },
+  stats.dynamoDbQuery,
+  ( req, res ) => {
+    res.status( 200 )
+      .json( req.data.stats )
+      .end();
+  }
+)
 
 module.exports = app => app.use( router );
