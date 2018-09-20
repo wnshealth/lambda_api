@@ -48,7 +48,25 @@ router.get(
           .json( { success: false, message: 'Invalid token.' } )
           .end();
   },
-  stats.dynamoDbQuery,
+  ( req, res ) => {
+    res.status( 200 )
+      .json( {} )
+      .end();
+  }
+)
+
+router.get(
+  '/v1/stats/daily',
+  middleware.data,
+  ( req, res, next ) => {
+    req.query.token === process.env.WNS_TOKEN
+      ? next()
+      : res.status( 401 )
+          .json( { success: false, message: 'Invalid token.' } )
+          .end();
+  },
+  stats.scanSources,
+  stats.queryLeadsByDay,
   ( req, res ) => {
     res.status( 200 )
       .json( req.data.stats )
