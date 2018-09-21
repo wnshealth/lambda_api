@@ -107,6 +107,7 @@ class Stats {
         stats.weekly_total_lead_count += 1;
       });
 
+      req.data.stats = stats;
       next();
     });
   }
