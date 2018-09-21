@@ -74,4 +74,23 @@ router.get(
   }
 )
 
+router.get(
+  '/v1/stats/weekly',
+  middleware.data,
+  ( req, res, next ) => {
+    req.query.token === process.env.WNS_TOKEN
+      ? next()
+      : res.status( 401 )
+          .json( { success: false, message: 'Invalid token.' } )
+          .end();
+  },
+  stats.scanSources,
+  stats.queryLeadsByWeek,
+  ( req, res ) => {
+    res.status( 200 )
+      .json( req.data.stats )
+      .end();
+  }
+)
+
 module.exports = app => app.use( router );
